@@ -47,16 +47,16 @@ func (b *Brush[color]) UseDefaultColor() *Brush[color] {
 
 func (b Brush[color]) Paint(s ...string) painted {
 	return painted{
-		foreground: b.Foreground.Sequence(false),
-		background: sequenceBg(b.Background),
+		foreground: b.Foreground.foreground(),
+		background: serializeBg(b.Background),
 		origin:     strings.Join(s, ""),
 	}
 }
 
 func (b Brush[color]) Repaint(p ...painted) painted {
 	var result = painted{
-		foreground: b.Foreground.Sequence(false),
-		background: sequenceBg(b.Background),
+		foreground: b.Foreground.foreground(),
+		background: serializeBg(b.Background),
 	}
 
 	for i := range p {

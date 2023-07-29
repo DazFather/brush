@@ -1,9 +1,11 @@
 package brush
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/muesli/termenv"
+const (
+	esc        = '\x1b'
+	csi        = string(esc) + "["
+	colorReset = "0"
 )
 
 type painted struct {
@@ -17,5 +19,5 @@ func (p painted) String() string {
 		style += ";" + p.background
 	}
 
-	return fmt.Sprintf("%s%sm%s%sm", termenv.CSI, style, p.origin, termenv.CSI+termenv.ResetSeq)
+	return fmt.Sprintf("%s%sm%s%sm", csi, style, p.origin, csi+colorReset)
 }
