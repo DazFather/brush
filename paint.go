@@ -1,6 +1,9 @@
 package brush
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const (
 	esc        = '\x1b'
@@ -10,7 +13,15 @@ const (
 
 type painted struct {
 	foreground, background string
-	origin                 string
+	content                string
+}
+
+func Paint[color ColorType](font color, background Optional[color], s ...string) painted {
+	return painted{
+		foreground: font.foreground(),
+		background: serializeBg(background),
+		content:    strings.Join(s, ""),
+	}
 }
 
 func (p painted) String() string {
@@ -19,5 +30,20 @@ func (p painted) String() string {
 		style += ";" + p.background
 	}
 
-	return fmt.Sprintf("%s%sm%s%sm", csi, style, p.origin, csi+colorReset)
+	return fmt.Sprintf("%s%sm%s%sm", csi, style, p.content, csi+colorReset)
+}
+
+func (p *painted) Append(s string) *painted {
+	p.content += s
+	return p
+}
+
+func (p *painted) Prepend(s string) *painted {
+	p.content = s + p.content
+	return p
+}
+
+func (p *painted) Replace(s string) *painted {
+	p.content = strings.ReplaceAll(s, "%s", p.content)
+	return p
 }

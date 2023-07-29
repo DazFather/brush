@@ -46,23 +46,15 @@ func (b *Brush[color]) UseDefaultColor() *Brush[color] {
 }
 
 func (b Brush[color]) Paint(s ...string) painted {
-	return painted{
-		foreground: b.Foreground.foreground(),
-		background: serializeBg(b.Background),
-		origin:     strings.Join(s, ""),
-	}
+	return Paint(b.Foreground, b.Background, s...)
 }
 
 func (b Brush[color]) Repaint(p ...painted) painted {
-	var result = painted{
-		foreground: b.Foreground.foreground(),
-		background: serializeBg(b.Background),
-	}
+	var result = b.Paint("")
 
 	for i := range p {
-		result.origin += p[i].origin
+		result.Append(p[i].content)
 	}
-
 	return result
 }
 
@@ -72,4 +64,41 @@ func (b Brush[color]) Print(s ...string) {
 
 func (b Brush[color]) Println(s ...string) {
 	b.Print(strings.Join(s, " "), "\n")
+}
+
+func (b Brush[color]) Embed(values ...any) []painted {
+	var (
+		result  []painted
+		current *painted
+		add     = func(s string) {
+			if s == "" {
+				return
+			}
+
+			if current != nil {
+				current.Append(s)
+				return
+			}
+
+			result = append(result, b.Paint(s))
+			current = &result[len(result)-1]
+		}
+	)
+
+	for _, rawValue := range values {
+		switch v := rawValue.(type) {
+		case painted:
+			result = append(result, v)
+			current = nil
+			continue
+		case string:
+			add(v)
+		case fmt.Stringer:
+			add(v.String())
+		default:
+			add(fmt.Sprint(v))
+		}
+	}
+
+	return result
 }
