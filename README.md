@@ -1,1 +1,61 @@
-# brush
+# Brush
+
+> Your humble terminal paintbrush. Heavily inspired by [termenv](https://github.com/muesli/termenv) and [lipgloss](https://github.com/charmbracelet/lipgloss)
+
+
+Brush is a simple and light librarie to help you paint your terminal outputs. If you need more then this consider using one of the filbraries linked before.
+
+## Usage
+
+Use the default "brush" aka the [Paint](https://pkg.go.dev/github.com/DazFather/brush#Paint) function to "paint" a given string with a foreground and background color, if the background is nil then the background will be the default of your terminal.
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/DazFather/brush"
+)
+
+func main() {
+	var font brush.ANSIColor = 1 // Red
+
+	fmt.Println("I", brush.Paint(font, nil, "love"), "go")
+}
+```
+Create your own brush with the [New](https://pkg.go.dev/github.com/DazFather/brush#New) function to change between multiple styling
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/DazFather/brush"
+)
+
+const (
+	Black brush.ANSIColor = iota
+	Red
+	Green
+	Yellow
+)
+
+func main() {
+	myBrush := brush.New(Yellow, brush.UseColor(Black))
+
+	fmt.Println(myBrush.Paint("Hello"), myBrush.Swap().Paint("World"), "!")
+	fmt.Println(myBrush.UseDefaultColor().Paint("I"), myBrush.UseFontColor(Red).Paint("love"), "go")
+}
+```
+
+## Colors
+The library uses the ANSI Color codes in 2 different format: ANSIColor (16 colors) and ExtendedANSIColor (256 colors).
+Check out the color codes on this table:
+![ANSI color chart](https://github.com/muesli/termenv/raw/master/examples/color-chart/color-chart.png)
+> Thanks again [termenv](https://github.com/muesli/termenv) for the image, don't mind if I _yoink_ it for now, right? <3
+
+## To Do
+[v] Create a function to embed a painted item into a string to paint
+[ ] Add documentation
+[ ] Add some helper for selecting the color (maybe from hex? or a set of constant)
+[ ] Create some examples and add some screenshots in the README
