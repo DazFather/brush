@@ -1,5 +1,6 @@
 # Brush
-
+[![Go Report Card](https://goreportcard.com/badge/github.com/DazFather/brush)](https://goreportcard.com/report/github.com/DazFather/brush)
+[![Go Reference](https://pkg.go.dev/badge/github.com/DazFather/brush.svg)](https://pkg.go.dev/github.com/DazFather/brush)
 > Your humble terminal paintbrush. Heavily inspired by [termenv](https://github.com/muesli/termenv) and [lipgloss](https://github.com/charmbracelet/lipgloss)
 
 
@@ -55,7 +56,7 @@ Check out the color codes on this table:
 > Thanks again [termenv](https://github.com/muesli/termenv) for the image, don't mind if I _yoink_ it for now, right? <3
 
 ## To Do
-[v] Create a function to embed a painted item into a string to paint
-[ ] Add documentation
-[ ] Add some helper for selecting the color (maybe from hex? or a set of constant)
-[ ] Create some examples and add some screenshots in the README
+- [x] Create a function to embed a painted item into a string to paint
+- [ ] Add documentation
+- [ ] Add some helper for selecting the color (maybe from hex? or a set of constant)
+- [ ] Create some examples and add some screenshots in the README
