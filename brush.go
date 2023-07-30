@@ -81,9 +81,9 @@ func (b Brush[color]) Println(s ...string) {
 	b.Print(strings.Join(s, " "), "\n")
 }
 
-// Embed lets creates a list of Painted items by joining the given values into as few as possible
+// Embed lets create a list of Painted items by joining the given values into as few as possible
 // applying the current font and background color of the brush
-// If a value is a Painted item it gets added to the list of result and it's style it mantained
+// If a value is a Painted item it gets added to the list of result and it's style it maintained
 func (b Brush[color]) Embed(values ...any) []Painted {
 	var (
 		result  []Painted
