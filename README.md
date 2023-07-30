@@ -50,13 +50,14 @@ func main() {
 ```
 
 ## Colors
-The library uses the ANSI Color codes in 2 different format: ANSIColor (16 colors) and ExtendedANSIColor (256 colors).
+The library uses the ANSI Color codes in 2 different format: `ANSIColor` (16 colors) and `ExtendedANSIColor` (256 colors).
 Check out the color codes on this table:
 ![ANSI color chart](https://github.com/muesli/termenv/raw/master/examples/color-chart/color-chart.png)
 > Thanks again [termenv](https://github.com/muesli/termenv) for the image, don't mind if I _yoink_ it for now, right? <3
 
 ## To Do
 - [x] Create a function to embed a painted item into a string to paint
-- [ ] Add documentation
+- [x] Add documentation
 - [ ] Add some helper for selecting the color (maybe from hex? or a set of constant)
 - [ ] Create some examples and add some screenshots in the README
+

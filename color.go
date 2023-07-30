@@ -2,6 +2,7 @@ package brush
 
 import "fmt"
 
+// ColorType represents a color from any set
 type ColorType interface {
 	ANSIColor | ExtendedANSIColor
 
@@ -9,6 +10,7 @@ type ColorType interface {
 	background() string
 }
 
+// ANSIColor represents a color from the first 16 colors in the ANSI table
 type ANSIColor uint8
 
 func (c ANSIColor) foreground() string {
@@ -29,6 +31,7 @@ func (c ANSIColor) background() string {
 	return fmt.Sprint(col + 92)
 }
 
+// ExtendedANSIColor represents a color from the extended ANSI table (256 colors)
 type ExtendedANSIColor uint8
 
 func (c ExtendedANSIColor) foreground() string {
@@ -39,12 +42,17 @@ func (c ExtendedANSIColor) background() string {
 	return fmt.Sprint("48;5;", int(c))
 }
 
+// Optional represents an optional color
 type Optional[color ColorType] *color
 
+// UseColor is an utility that lets you transform a color in an Optional
+// this can be expecially usefull on the New or Paint function when selecting background
 func UseColor[color ColorType](c color) Optional[color] {
 	return &c
 }
 
+// PickColor is an utility that lets you take the color referenced on the first argument
+// or in case it's nil the second as a default case
 func PickColor[color ColorType](opt Optional[color], def color) color {
 	if opt != nil {
 		return *opt
