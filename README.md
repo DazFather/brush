@@ -4,7 +4,7 @@
 > Your humble terminal paintbrush. Heavily inspired by [termenv](https://github.com/muesli/termenv) and [lipgloss](https://github.com/charmbracelet/lipgloss)
 
 
-Brush is a simple and light librarie to help you paint your terminal outputs. If you need more then this consider using one of the filbraries linked before.
+Brush is a simple and light library to help you paint your terminal outputs. If you need more than this consider using one of the libraries linked before.
 
 ## Usage
 
@@ -24,7 +24,7 @@ func main() {
 	fmt.Println("I", brush.Paint(font, nil, "love"), "go")
 }
 ```
-Create your own brush with the [New](https://pkg.go.dev/github.com/DazFather/brush#New) function to change between multiple styling
+Create your own brush via the [New](https://pkg.go.dev/github.com/DazFather/brush#New) function to change between multiple styling
 ```go
 package main
 
