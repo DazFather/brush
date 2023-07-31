@@ -53,22 +53,6 @@ func (b *Brush[color]) UseDefaultColor() *Brush[color] {
 	return b
 }
 
-// Paint some strings (joined without separator) with the current font and background color of the brush
-func (b Brush[color]) Paint(s ...string) Painted {
-	return Paint(b.Foreground, b.Background, s...)
-}
-
-// Repaint some previously Painted items joining their contents (without separator)
-// and using the current font and background color of the brush
-func (b Brush[color]) Repaint(p ...Painted) Painted {
-	var result = b.Paint("")
-
-	for i := range p {
-		result.Append(p[i].content)
-	}
-	return result
-}
-
 // Print shows on stdout some strings (joined without separator)
 // applying the current font and background color of the brush
 func (b Brush[color]) Print(s ...string) {

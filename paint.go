@@ -26,6 +26,22 @@ func Paint[color ColorType](font color, background Optional[color], s ...string)
 	}
 }
 
+// Paint some strings (joined without separator) with the current font and background color of the brush
+func (b Brush[color]) Paint(s ...string) Painted {
+	return Paint(b.Foreground, b.Background, s...)
+}
+
+// Repaint some previously Painted items joining their contents (without separator)
+// and using the current font and background color of the brush
+func (b Brush[color]) Repaint(p ...Painted) Painted {
+	var result = b.Paint("")
+
+	for i := range p {
+		result.Append(p[i].content)
+	}
+	return result
+}
+
 // String gives a string that contains some special sequence that will apply styling
 func (p Painted) String() string {
 	style := p.foreground
