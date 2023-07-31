@@ -51,7 +51,7 @@ type Highlighted struct {
 	content string
 }
 
-// Join different values toghether into a single item maintaining all styling
+// Join different values together into a single item maintaining all styling
 func Join(values ...any) (joined Highlighted) {
 	joined.Append(values...)
 	return
