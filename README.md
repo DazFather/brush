@@ -19,9 +19,8 @@ import (
 )
 
 func main() {
-	var font brush.ANSIColor = 1 // Red
-
-	fmt.Println("I", brush.Paint(font, nil, "love"), "go")
+	// The nil indicates the background (in this case Transparent)
+	fmt.Println("I", brush.Paint(brush.Red, nil, "love"), "go")
 }
 ```
 Create your own brush via the [New](https://pkg.go.dev/github.com/DazFather/brush#New) function to change between multiple styling
@@ -34,18 +33,11 @@ import (
 	"github.com/DazFather/brush"
 )
 
-const (
-	Black brush.ANSIColor = iota
-	Red
-	Green
-	Yellow
-)
-
 func main() {
-	myBrush := brush.New(Yellow, brush.UseColor(Black))
+	myBrush := brush.New(brush.Yellow, brush.UseColor(brush.Black))
 
 	fmt.Println(myBrush.Paint("Hello"), myBrush.Swap().Paint("World"), "!")
-	fmt.Println(myBrush.UseDefaultColor().Paint("I"), myBrush.UseFontColor(Red).Paint("love"), "go")
+	fmt.Println(myBrush.UseDefaultColor().Paint("I"), myBrush.UseFontColor(brush.Red).Paint("love"), "go")
 }
 ```
 
@@ -58,6 +50,6 @@ Check out the color codes on this table:
 ## To Do
 - [x] Create a function to embed a painted item into a string to paint
 - [x] Add documentation
-- [ ] Add some helper for selecting the color (maybe from hex? or a set of constant)
+- [x] Add some helper functions and constants for selecting colors
 - [ ] Create some examples and add some screenshots in the README
 
