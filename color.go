@@ -2,6 +2,12 @@ package brush
 
 import "fmt"
 
+const (
+	esc        = '\x1b'
+	csi        = string(esc) + "["
+	colorReset = "0"
+)
+
 // ColorType represents a color from any set
 type ColorType interface {
 	ANSIColor | ExtendedANSIColor
@@ -61,10 +67,28 @@ func PickColor[color ColorType](opt Optional[color], def color) color {
 	return def
 }
 
-func serializeBg[color ColorType](opt Optional[color]) (sequence string) {
-	if opt != nil {
-		sequence = (*opt).background()
+type style struct {
+	foreground, background string
+}
+
+func serialize[color ColorType](foreground color, background Optional[color]) style {
+	var s = style{foreground: foreground.foreground()}
+	if background != nil {
+		s.background = (*background).background()
 	}
 
-	return
+	return s
+}
+
+func (b *Brush[color]) extract() style {
+	return serialize(b.Foreground, b.Background)
+}
+
+func (s style) apply(content string) string {
+	style := s.foreground
+	if len(s.background) > 0 {
+		style += ";" + s.background
+	}
+
+	return fmt.Sprintf("%s%sm%s%sm", csi, style, content, csi+colorReset)
 }

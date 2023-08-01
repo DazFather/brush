@@ -6,36 +6,28 @@ import (
 )
 
 type section struct {
-	from                   int
-	to                     int
-	foreground, background string
+	from, to int
+	style
 }
 
-func (b *Brush[color]) newSection(from, to int) section {
+func (b Brush[color]) newSection(from, to int) section {
 	return section{
-		from:       from,
-		to:         to,
-		foreground: b.Foreground.foreground(),
-		background: serializeBg(b.Background),
+		from:  from,
+		to:    to,
+		style: b.extract(),
 	}
 }
 
-func (b *Painted) newSection(from int) section {
+func (b Painted) newSection(from int) section {
 	return section{
-		from:       from,
-		to:         from + len(b.content),
-		foreground: b.foreground,
-		background: b.background,
+		from:  from,
+		to:    from + len(b.content),
+		style: b.style,
 	}
 }
 
 func (s section) evaluateOn(content string) string {
-	style := s.foreground
-	if len(s.background) > 0 {
-		style += ";" + s.background
-	}
-
-	return fmt.Sprintf("%s%sm%s%sm", csi, style, content[s.from:s.to], csi+colorReset)
+	return s.style.apply(content[s.from:s.to])
 }
 
 func (s *section) shift(offset int) {

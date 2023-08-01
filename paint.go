@@ -1,34 +1,27 @@
 package brush
 
-import (
-	"fmt"
-	"strings"
-)
-
-const (
-	esc        = '\x1b'
-	csi        = string(esc) + "["
-	colorReset = "0"
-)
+import "strings"
 
 // Painted represents a string that contains information about it's foreground and background color output
 type Painted struct {
-	foreground, background string
-	content                string
+	content string
+	style
 }
 
 // Paint some strings (joined without separator) with the specified font and background color
 func Paint[color ColorType](font color, background Optional[color], s ...string) Painted {
 	return Painted{
-		foreground: font.foreground(),
-		background: serializeBg(background),
-		content:    strings.Join(s, ""),
+		content: strings.Join(s, ""),
+		style:   serialize(font, background),
 	}
 }
 
 // Paint some strings (joined without separator) with the current font and background color of the brush
 func (b Brush[color]) Paint(s ...string) Painted {
-	return Paint(b.Foreground, b.Background, s...)
+	return Painted{
+		content: strings.Join(s, ""),
+		style:   b.extract(),
+	}
 }
 
 // Repaint some previously Painted items joining their contents (without separator)
@@ -44,12 +37,7 @@ func (b Brush[color]) Repaint(p ...Painted) Painted {
 
 // String gives a string that contains some special sequence that will apply styling
 func (p Painted) String() string {
-	style := p.foreground
-	if len(p.background) > 0 {
-		style += ";" + p.background
-	}
-
-	return fmt.Sprintf("%s%sm%s%sm", csi, style, p.content, csi+colorReset)
+	return p.apply(p.content)
 }
 
 // Append a string at the end of the content of the painted item
