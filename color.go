@@ -107,7 +107,7 @@ func (c ExtendedANSIColor) background() string {
 type Optional[color ColorType] *color
 
 // UseColor is an utility that lets you transform a color in an Optional
-// this can be expecially usefull on the New or Paint function when selecting background
+// this can be especially useful on the New or Paint function when selecting a background
 func UseColor[color ColorType](c color) Optional[color] {
 	return &c
 }
