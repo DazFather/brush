@@ -1,6 +1,9 @@
 package brush
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // Painted represents a string that contains information about it's foreground and background color output
 type Painted struct {
@@ -8,31 +11,50 @@ type Painted struct {
 	style
 }
 
-// Paint some strings (joined without separator) with the specified font and background color
-func Paint[color ColorType](font color, background Optional[color], s ...string) Painted {
-	return Painted{
-		content: strings.Join(s, ""),
-		style:   serialize(font, background),
+// Paint some values (joined without separator) with the specified font and background color.
+// If a Painted and/or an Highlighted item is given, they will lose their previous style
+// and provided font and background colors will be enforced
+func Paint[color ColorType](font color, background Optional[color], values ...any) Painted {
+	var res = Painted{style: serialize(font, background)}
+
+	for _, v := range values {
+		res.content += extractContent(v)
 	}
+
+	return res
 }
 
-// Paint some strings (joined without separator) with the current font and background color of the brush
-func (b Brush[color]) Paint(s ...string) Painted {
-	return Painted{
-		content: strings.Join(s, ""),
-		style:   b.extract(),
+// Paintln like Paint but similarly to fmt.Sprintln it separates values with " "
+// and it adds a "\n" at the end of all
+func Paintln[color ColorType](font color, background Optional[color], values ...any) Painted {
+	const separator = " "
+	var res = Painted{style: serialize(font, background)}
+
+	if len(values) == 0 {
+		res.content = "\n"
+		return res
 	}
+
+	last := len(values) - 1
+	for i := range values[:last] {
+		res.content += extractContent(values[i]) + " "
+	}
+	res.content += extractContent(values[last]) + "\n"
+
+	return res
 }
 
-// Repaint some previously Painted items joining their contents (without separator)
-// and using the current font and background color of the brush
-func (b Brush[color]) Repaint(p ...Painted) Painted {
-	var result = b.Paint("")
+// Paint some values (joined without separator) with the current brush colors.
+// If a Painted and/or an Highlighted item is given, they will lose their previous style
+// and the cuttent styling of the brush will be enforced
+func (b Brush[color]) Paint(values ...any) Painted {
+	return Paint(b.Foreground, b.Background, values...)
+}
 
-	for i := range p {
-		result.Append(p[i].content)
-	}
-	return result
+// Paintln like Paint but similarly to fmt.Sprintln it separates values with " "
+// and it adds a "\n" at the end of all
+func (b Brush[color]) Paintln(values ...any) Painted {
+	return Paintln(b.Foreground, b.Background, values...)
 }
 
 // String gives a string that contains some special sequence that will apply styling
@@ -60,4 +82,21 @@ func (p *Painted) Prepend(s string) *Painted {
 func (p *Painted) Replace(s string) *Painted {
 	p.content = strings.ReplaceAll(s, "%s", p.content)
 	return p
+}
+
+func extractContent(value any) (content string) {
+	switch v := value.(type) {
+	case Painted:
+		content = v.content
+	case Highlighted:
+		content = v.content
+	case string:
+		content = v
+	case fmt.Stringer:
+		content = v.String()
+	default:
+		content = fmt.Sprint(v)
+	}
+
+	return
 }

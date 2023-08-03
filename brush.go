@@ -1,9 +1,6 @@
 package brush
 
-import (
-	"fmt"
-	"strings"
-)
+import "fmt"
 
 // Brush lets you paint some strings and change styling more freely
 type Brush[color ColorType] struct {
@@ -53,14 +50,14 @@ func (b *Brush[color]) UseDefaultColor() *Brush[color] {
 	return b
 }
 
-// Print shows on stdout some strings (joined without separator)
-// applying the current font and background color of the brush
-func (b Brush[color]) Print(s ...string) {
-	fmt.Print(b.Paint(s...))
+// Print shows on stdout some values (joined without separator)
+// enforcing the current font and background color of the brush
+func (b Brush[color]) Print(values ...any) {
+	fmt.Print(b.Paint(values...))
 }
 
-// Println shows on stdout some strings (joined with " ") and adding a "\n" at the end
-// applying the current font and background color of the brush
-func (b Brush[color]) Println(s ...string) {
-	b.Print(strings.Join(s, " "), "\n")
+// Println shows on stdout some values (joined with " ", and adding a "\n" at the end)
+// enforcing the current font and background color of the brush
+func (b Brush[color]) Println(values ...any) {
+	fmt.Print(b.Paintln(values...))
 }
