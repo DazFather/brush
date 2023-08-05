@@ -61,3 +61,9 @@ func (b Brush[color]) Print(values ...any) {
 func (b Brush[color]) Println(values ...any) {
 	fmt.Print(b.Paintln(values...))
 }
+
+// Printf shows on stdout some values by replacing the placeholders in the given model with the corresponding values
+// enforcing the current font and background color of the brush
+func (b Brush[color]) Printf(model string, values ...any) {
+	fmt.Print(b.Paintf(model, values...))
+}
