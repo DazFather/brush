@@ -24,8 +24,10 @@ func Paint[color ColorType](font color, background Optional[color], values ...an
 	return res
 }
 
-// Paintln like Paint but similarly to fmt.Sprintln it separates values with " "
-// and it adds a "\n" at the end of all
+// Paintln is like Paint but similarly to fmt.Sprintln it separates values with " "
+// and it adds a "\n" at the end of all.
+// If a Painted and/or an Highlighted item is given, they will lose their previous style
+// and provided font and background colors will be enforced
 func Paintln[color ColorType](font color, background Optional[color], values ...any) Painted {
 	const separator = " "
 	var res = Painted{style: serialize(font, background)}
@@ -44,17 +46,47 @@ func Paintln[color ColorType](font color, background Optional[color], values ...
 	return res
 }
 
+// Paintf is like Paint but similarly to fmt.Sprintf it allows to use a model
+// with some placeholders that will be replaced by the values.
+// If a Painted and/or an Highlighted item is given, they will lose their previous style
+// and provided font and background colors will be enforced
+func Paintf[color ColorType](font color, background Optional[color], model string, values ...any) Painted {
+	for i := range values {
+		switch v := values[i].(type) {
+		case Painted:
+			values[i] = v.content
+		case Highlighted:
+			values[i] = v.content
+		}
+	}
+
+	return Painted{
+		style:   serialize(font, background),
+		content: fmt.Sprintf(model, values...),
+	}
+}
+
 // Paint some values (joined without separator) with the current brush colors.
 // If a Painted and/or an Highlighted item is given, they will lose their previous style
-// and the cuttent styling of the brush will be enforced
+// and the current styling of the brush will be enforced
 func (b Brush[color]) Paint(values ...any) Painted {
 	return Paint(b.Foreground, b.Background, values...)
 }
 
 // Paintln like Paint but similarly to fmt.Sprintln it separates values with " "
-// and it adds a "\n" at the end of all
+// and it adds a "\n" at the end of all.
+// If a Painted and/or an Highlighted item is given, they will lose their previous style
+// and the current styling of the brush will be enforced
 func (b Brush[color]) Paintln(values ...any) Painted {
 	return Paintln(b.Foreground, b.Background, values...)
+}
+
+// Paintf is like Paint but similarly to fmt.Sprintf it allows to use a model
+// with some placeholders that will be replaced by the values.
+// If a Painted and/or an Highlighted item is given, they will lose their previous style
+// and the current styling of the brush will be enforced
+func (b Brush[color]) Paintf(model string, values ...any) Painted {
+	return Paintf(b.Foreground, b.Background, model, values...)
 }
 
 // String gives a string that contains some special sequence that will apply styling
