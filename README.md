@@ -1,11 +1,18 @@
-# Brush
-![brush logo](https://github.com/DazFather/brush/raw/main/examples/logo/github_dazfather_brush_logo.png)
-[![Go Report Card](https://goreportcard.com/badge/github.com/DazFather/brush)](https://goreportcard.com/report/github.com/DazFather/brush)
-[![Go Reference](https://pkg.go.dev/badge/github.com/DazFather/brush.svg)](https://pkg.go.dev/github.com/DazFather/brush)
-> Your humble terminal paintbrush. Heavily inspired by [termenv](https://github.com/muesli/termenv) and [lipgloss](https://github.com/charmbracelet/lipgloss)
+<p align="center" width="100%">
+	<a href="https://github.com/DazFather/brush/raw/main/examples/logo/main.go">
+		<img alt="brush logo" src="https://github.com/DazFather/brush/raw/main/examples/logo/github_dazfather_brush_logo.png">
+	</a>
+	<p align="center" width="100%">
+		<a href="https://img.shields.io/badge/Language-Go-blue.svg"><img alt="Language" src="https://img.shields.io/badge/Language-Go-blue.svg"></a>
+		<a href="https://github.com/DazFather/brush/blob/main/LICENSE"><img alt="License" src="http://img.shields.io/badge/license-MIT-orange.svg?style=flat"></a>
+		<a href="https://goreportcard.com/report/github.com/DazFather/brush"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/DazFather/brush"></a>
+		<a href="https://pkg.go.dev/github.com/DazFather/brush"><img alt="Go Reference" src="https://pkg.go.dev/badge/github.com/DazFather/brush.svg"></a>
+	</p>
+</p>
 
+Brush is a simple and light library to help you paint your terminal outputs
 
-Brush is a simple and light library to help you paint your terminal outputs. If you need more than this consider using one of the libraries linked before.
+>  Heavily inspired by [termenv](https://github.com/muesli/termenv) and [lipgloss](https://github.com/charmbracelet/lipgloss)
 
 ## Philosopy
 
