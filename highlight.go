@@ -73,6 +73,7 @@ func (b Brush[color]) HighlightFunc(s string, find *regexp.Regexp, repl func(str
 
 	found := find.FindAllStringIndex(s, -1)
 	if found == nil {
+		result.content = s
 		return result
 	}
 
