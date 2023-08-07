@@ -55,7 +55,11 @@ func Paintf[color ColorType](font color, background Optional[color], model strin
 		switch v := values[i].(type) {
 		case Painted:
 			values[i] = v.content
+		case *Painted:
+			values[i] = v.content
 		case Highlighted:
+			values[i] = v.content
+		case *Highlighted:
 			values[i] = v.content
 		}
 	}
@@ -120,7 +124,11 @@ func extractContent(value any) (content string) {
 	switch v := value.(type) {
 	case Painted:
 		content = v.content
+	case *Painted:
+		content = v.content
 	case Highlighted:
+		content = v.content
+	case *Highlighted:
 		content = v.content
 	case string:
 		content = v
