@@ -155,7 +155,7 @@ func (h *Highlighted) addSections(s ...section) {
 }
 
 // Append lets you add some items at the end of the Highlighted content
-func (h *Highlighted) Append(values ...any) {
+func (h *Highlighted) Append(values ...any) *Highlighted {
 	for i := range values {
 		size := len(h.content)
 
@@ -173,6 +173,8 @@ func (h *Highlighted) Append(values ...any) {
 			h.content += fmt.Sprint(v)
 		}
 	}
+
+	return h
 }
 
 // String evaluates the content by applying the different styling where specified
