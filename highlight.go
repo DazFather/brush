@@ -118,20 +118,10 @@ func (b Brush[color]) Embed(values ...any) Highlighted {
 		case Painted:
 			res.addSections(v.newSection(size))
 			res.content += v.content
+		case *Highlighted:
+			b.embedHightlight(&res, *v)
 		case Highlighted:
-			last := size
-			for _, sec := range v.sectors {
-				sec.shift(size)
-				if last < sec.from {
-					res.addSections(b.newSection(last, sec.from))
-				}
-				res.addSections(sec)
-				last = sec.to
-			}
-			res.content += v.content
-			if size = len(res.content); last < size {
-				res.addSections(b.newSection(last, size))
-			}
+			b.embedHightlight(&res, v)
 		case string:
 			res.addSections(b.newSection(size, size+len(v)))
 			res.content += v
@@ -148,6 +138,26 @@ func (b Brush[color]) Embed(values ...any) Highlighted {
 	}
 
 	return res
+}
+
+func (b Brush[color]) embedHightlight(res *Highlighted, v Highlighted) {
+	var (
+		size = len((*res).content)
+		last = size
+	)
+
+	for _, sec := range v.sectors {
+		sec.shift(size)
+		if last < sec.from {
+			res.addSections(b.newSection(last, sec.from))
+		}
+		res.addSections(sec)
+		last = sec.to
+	}
+	res.content += v.content
+	if size = len(res.content); last < size {
+		res.addSections(b.newSection(last, size))
+	}
 }
 
 func (h *Highlighted) addSections(s ...section) {

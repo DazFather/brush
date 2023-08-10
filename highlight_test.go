@@ -84,6 +84,11 @@ func TestBrush_Highlight(t *testing.T) {
 		marker = brush.New(brush.Red, nil)
 	)
 
+	assert(t, `Highlighting: nothing`,
+		marker.Highlight("garbage", rgx).String(),
+		"garbage",
+	)
+
 	assert(t, `Highlighting: "red"`,
 		marker.Highlight("trashredgarbage", rgx).String(),
 		"trash[31mred[0mgarbage",
@@ -92,6 +97,20 @@ func TestBrush_Highlight(t *testing.T) {
 	assert(t, `Highlighting: "red banana"`,
 		marker.Highlight("trash red banana trash red lolred", rgx).String(),
 		"trash [31mred[0m banana trash [31mred[0m lol[31mred[0m",
+	)
+}
+
+func TestBrush_HighlightFunc(t *testing.T) {
+	var (
+		rgx    = regexp.MustCompile(`red`)
+		marker = brush.New(brush.Red, nil)
+		repl   = func(_ string) string { return "" }
+		text   = "garbage"
+	)
+
+	assert(t, `Highlighting: nothing`,
+		marker.HighlightFunc(text, rgx, repl).String(),
+		text,
 	)
 }
 
@@ -118,4 +137,62 @@ func TestHighlighted_Append(t *testing.T) {
 		).String(),
 		"trash[31mred[0mgarbagecoolciao[32mgreen[0m3trash [31mred banana[0m trash",
 	)
+}
+
+func TestBrush_Embed(t *testing.T) {
+	var (
+		myBrush = brush.New(brush.Red, nil)
+		marker  = brush.New(brush.Black, brush.UseColor(brush.Yellow))
+	)
+
+	assert(t, `Embedding: nothing`, myBrush.Embed().String(), "")
+
+	banana := marker.Paint("banana")
+	assert(t, `Embedding: "1 cool banana"`,
+		myBrush.Embed(1, " ", cool{}, " ", banana).String(),
+		"[31m1[0m[31m [0m[31mcool[0m[31m [0m[30;43mbanana[0m",
+	)
+
+	isYellow := brush.Join(" is ", marker.Paint("yellow"))
+	assert(t, `Embedding: "The banana is yellow"`,
+		myBrush.Embed("The ", &banana, isYellow).String(),
+		"[31mThe [0m[31m[30;43mbanana[0m[0m[31m is [0m[30;43myellow[0m",
+	)
+
+	text := "A fox jumps over the lazy dog"
+	vouels := regexp.MustCompile(`(?i)[aeiou]`)
+	h := marker.Highlight(text, vouels)
+	expected := "[30;43mA[0m[31m f[0m[30;43mo[0m[31mx j[0m[30;43mu[0m[31mmps [0m[30;43mo[0m[31mv[0m[30;43me[0m[31mr th[0m[30;43me[0m[31m l[0m[30;43ma[0m[31mzy d[0m[30;43mo[0m[31mg[0m[31m![0m"
+
+	assert(t, fmt.Sprintf(`Embedding: "%s"`, text),
+		myBrush.Embed(h, "!").String(),
+		expected,
+	)
+
+	assert(t, fmt.Sprintf(`Embedding: pointer to "%s"`, text),
+		myBrush.Embed(&h, "!").String(),
+		expected,
+	)
+
+	text = reverse(text)
+	h = marker.Highlight(text, vouels)
+	expected = "[31mg[0m[30;43mo[0m[31md yz[0m[30;43ma[0m[31ml [0m[30;43me[0m[31mht r[0m[30;43me[0m[31mv[0m[30;43mo[0m[31m spm[0m[30;43mu[0m[31mj x[0m[30;43mo[0m[31mf [0m[30;43mA[0m[31m![0m"
+	assert(t, fmt.Sprintf(`Embedding: "%s"`, text),
+		myBrush.Embed(h, "!").String(),
+		expected,
+	)
+
+	assert(t, fmt.Sprintf(`Embedding: pointer to "%s"`, text),
+		myBrush.Embed(&h, "!").String(),
+		expected,
+	)
+}
+
+func reverse(s string) string {
+	size := len(s)
+	runes := make([]rune, size)
+	for i, ch := range s {
+		runes[size-1-i] = ch
+	}
+	return string(runes)
 }
