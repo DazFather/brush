@@ -6,6 +6,7 @@
 		<a href="https://img.shields.io/badge/Language-Go-blue.svg"><img alt="Language" src="https://img.shields.io/badge/Language-Go-blue.svg"></a>
 		<a href="https://github.com/DazFather/brush/blob/main/LICENSE"><img alt="License" src="http://img.shields.io/badge/license-MIT-orange.svg?style=flat"></a>
 		<a href="https://goreportcard.com/report/github.com/DazFather/brush"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/DazFather/brush"></a>
+		<a href="https://coveralls.io/github/DazFather/brush?branch=main"><img alt="Coverage Status" src="https://coveralls.io/repos/github/DazFather/brush/badge.svg?branch=main"/></a>
 		<a href="https://pkg.go.dev/github.com/DazFather/brush"><img alt="Go Reference" src="https://pkg.go.dev/badge/github.com/DazFather/brush.svg"></a>
 	</p>
 </p>
