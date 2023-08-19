@@ -24,6 +24,7 @@ func ExampleGrayScale() {
 		white     = brush.GrayScale(brush.MaxGrayScale)
 		lightGray = brush.GrayScale(brush.MaxGrayScale - 5)
 		gray      = brush.GrayScale(brush.MaxGrayScale / 2)
+		black     = brush.GrayScale(0)
 
 		myBrush = brush.New(brush.Black.ToExtended(), nil)
 	)
@@ -31,19 +32,21 @@ func ExampleGrayScale() {
 	myBrush.UseBgColor(white).Println("Sunny")
 	myBrush.UseBgColor(lightGray).Println("Cloudy")
 	myBrush.UseBgColor(gray).Println("Rainy")
+	myBrush.UseBgColor(black).Println("WTF")
 
 	// Output:
 	// [38;5;0;48;5;15mSunny
 	// [0m[38;5;0;48;5;251mCloudy
 	// [0m[38;5;0;48;5;243mRainy
+	// [0m[38;5;0;48;5;0mWTF
 	// [0m
 }
 
 func ExampleUseColor() {
 	selectedBg := brush.UseColor(brush.Magenta)
 
-	fmt.Println(brush.Paint(brush.White, selectedBg, "Magenta"), "is cool")
-	// Output: [37;45mMagenta[0m is cool
+	fmt.Println(brush.Paint(brush.BrightMagenta, selectedBg, "Magenta"), "is cool")
+	// Output: [95;45mMagenta[0m is cool
 }
 
 func ExamplePickColor() {

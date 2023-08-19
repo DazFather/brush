@@ -38,14 +38,14 @@ func ExampleBrush_Highlight() {
 }
 
 func ExampleBrush_HighlightFunc() {
-	marker := brush.New(brush.Yellow, nil)
+	marker := brush.New(brush.Black, brush.UseColor(brush.BrightYellow))
 
 	fmt.Print(marker.HighlightFunc(
 		"this is uppercase and yellow",
 		regexp.MustCompile("uppercase"),
 		strings.ToUpper,
 	))
-	// Output: this is [33mUPPERCASE[0m and yellow
+	// Output: this is [30;103mUPPERCASE[0m and yellow
 }
 
 func ExampleHighlighted_Append() {
@@ -121,21 +121,30 @@ func TestHighlighted_Append(t *testing.T) {
 	)
 
 	banana := marker.Highlight("trash red banana", rgx)
+	expected := "trash [31mred banana[0m"
+	assert(t, `Append: nothing`,
+		banana.Append().String(),
+		expected,
+	)
+
+	expected += " trash"
 	assert(t, `Append to "banana"`,
 		banana.Append(" trash").String(),
 		"trash [31mred banana[0m trash",
 	)
 
+	ciao := marker.Highlight("ciao", regexp.MustCompile(`(?i)[aeiou]`))
+
 	test := marker.Highlight("trashredgarbage", rgx)
 	assert(t, `Append`,
 		test.Append(
 			cool{},
-			"ciao",
+			ciao,
 			brush.Paint(brush.Green, nil, "green"),
 			3,
 			&banana,
 		).String(),
-		"trash[31mred[0mgarbagecoolciao[32mgreen[0m3trash [31mred banana[0m trash",
+		"trash[31mred[0mgarbagecoolc[31mi[0m[31ma[0m[31mo[0m[32mgreen[0m3trash [31mred banana[0m trash",
 	)
 }
 

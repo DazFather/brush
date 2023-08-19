@@ -167,24 +167,30 @@ func (h *Highlighted) addSections(s ...section) {
 // Append lets you add some items at the end of the Highlighted content
 func (h *Highlighted) Append(values ...any) *Highlighted {
 	for i := range values {
-		size := len(h.content)
-
 		switch v := values[i].(type) {
 		case Painted:
-			h.addSections(v.newSection(size))
+			h.addSections(v.newSection(len(h.content)))
 			h.content += v.content
+		case *Highlighted:
+			h.append(*v)
 		case Highlighted:
-			for _, sec := range v.sectors {
-				sec.shift(size)
-				h.addSections(sec)
-			}
-			h.content += v.content
+			h.append(v)
 		default:
 			h.content += fmt.Sprint(v)
 		}
 	}
 
 	return h
+}
+
+func (h *Highlighted) append(v Highlighted) {
+	size := len(h.content)
+
+	for _, sec := range v.sectors {
+		sec.shift(size)
+		h.addSections(sec)
+	}
+	h.content += v.content
 }
 
 // String evaluates the content by applying the different styling where specified
