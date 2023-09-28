@@ -115,6 +115,11 @@ func TestPaintln(t *testing.T) {
 		brush.Paintln(brush.Black, brush.UseColor(brush.Yellow), 3, cool{}, "yellow", banana.Append("s")).String(),
 		"[30;43m3 cool yellow bananas\n[0m",
 	)
+
+	assert(t, `Painting ""`,
+		brush.Paintln(brush.White, nil, "").String(),
+		"[37m\n[0m",
+	)
 }
 
 /* ---[ UTILS ]--- */

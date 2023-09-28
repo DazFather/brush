@@ -51,17 +51,8 @@ func Paintln[color ColorType](font color, background Optional[color], values ...
 // If a Painted and/or an Highlighted item is given, they will lose their previous style
 // and provided font and background colors will be enforced
 func Paintf[color ColorType](font color, background Optional[color], model string, values ...any) Painted {
-	for i := range values {
-		switch v := values[i].(type) {
-		case Painted:
-			values[i] = v.content
-		case *Painted:
-			values[i] = v.content
-		case Highlighted:
-			values[i] = v.content
-		case *Highlighted:
-			values[i] = v.content
-		}
+	for i, v := range values {
+		values[i] = extractContent(v)
 	}
 
 	return Painted{

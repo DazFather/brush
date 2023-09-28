@@ -1,10 +1,6 @@
 package brush_test
 
-import (
-	//"fmt"
-
-	"github.com/DazFather/brush"
-)
+import "github.com/DazFather/brush"
 
 func ExampleBrush_UseFontColor() {
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
