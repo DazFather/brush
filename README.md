@@ -59,6 +59,9 @@ Use the [Highlight](https://pkg.go.dev/github.com/DazFather/brush#Highlight) met
 fmt.Println(myBrush.Hightlight("I love go", regexp.MustCompile("love")))
 ```
 
+### Examples
+If you need more examples, you can find more [here](https://github.com/DazFather/brush/tree/main/examples) 
+
 
 ## Colors
 The library uses the ANSI Color codes in 2 different format:
