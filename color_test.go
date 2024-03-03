@@ -62,3 +62,15 @@ func ExamplePickColor() {
 	// [0m[30;43mreversed brush example
 	// [0m
 }
+
+func ExampleTrueColor() {
+	var (
+		pinkish  = brush.TrueColor{Red: 255, Green: 82, Blue: 197}
+		brownish = brush.TrueColor{155, 106, 0}
+		myBrush  = brush.New(pinkish, &brownish)
+	)
+
+	myBrush.Println("HELLO WORLD")
+	// Output: [38;2;255;82;197;48;2;155;106;0mHELLO WORLD
+	// [0m
+}

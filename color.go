@@ -4,7 +4,7 @@ import "fmt"
 
 // ColorType represents a color from any set
 type ColorType interface {
-	ANSIColor | ExtendedANSIColor
+	ANSIColor | ExtendedANSIColor | TrueColor
 
 	foreground() string
 	background() string
@@ -54,7 +54,7 @@ func (c ANSIColor) background() string {
 // ExtendedANSIColor represents a color from the extended ANSI table (256 colors)
 type ExtendedANSIColor uint8
 
-// ToExtended transforms ANSIColor to an ExtendedANSIColor
+// ToExtended transforms an ANSIColor to an ExtendedANSIColor representation
 func (color ANSIColor) ToExtended() ExtendedANSIColor {
 	return ExtendedANSIColor(color)
 }
@@ -73,6 +73,8 @@ const (
 
 // RGB picks a color from the ExtendedANSIColor table by mixing for each
 // one of the primary colors, different levels of intensity from 0 to 5.
+//
+// If you want all range from 0 to 255 use TrueColor (might not be supported in your terminal)
 //
 // A set of contant is declared on the package as helper, in order:
 // ZeroIntensity, LowIntensity, ModerateIntensity, MediumIntensity, HightIntensity, MaxIntensity
@@ -153,3 +155,76 @@ func (s style) apply(content string) string {
 
 	return fmt.Sprintf("%s%sm%s%sm", csi, style, content, csi+colorReset)
 }
+
+// TrueColor is a true RGB color representation.
+// Be aware that not all terminal support this format
+type TrueColor struct {
+	Red, Green, Blue uint8
+}
+
+func (c TrueColor) foreground() string {
+	return fmt.Sprint("38;2;", c.Red, ";", c.Green, ";", c.Blue)
+}
+
+func (c TrueColor) background() string {
+	return fmt.Sprint("48;2;", c.Red, ";", c.Green, ";", c.Blue)
+}
+
+// ToTrueColor transforms an ANSIColor to a standard TrueColor representation.
+// Be aware that the actual color might be different from the original, 
+// because the visible color might be different from the one of your terminal.
+func (c ANSIColor) ToTrueColor() (tc TrueColor) {
+	switch c {
+	case Black:
+		tc = TrueColor{0, 0, 0}
+	case Red:
+		tc = TrueColor{128, 0, 0}
+	case Green:
+		tc = TrueColor{0, 128, 0}
+	case Yellow:
+		tc = TrueColor{128, 128, 0}
+	case Blue:
+		tc = TrueColor{0, 0, 128}
+	case Magenta:
+		tc = TrueColor{128, 0, 128}
+	case Cyan:
+		tc = TrueColor{0, 128, 128}
+	case White:
+		tc = TrueColor{192, 192, 192}
+	case BrightBlack:
+		tc = TrueColor{128, 128, 128}
+	case BrightRed:
+		tc = TrueColor{255, 0, 0}
+	case BrightGreen:
+		tc = TrueColor{0, 255, 0}
+	case BrightYellow:
+		tc = TrueColor{255, 255, 0}
+	case BrightBlue:
+		tc = TrueColor{0, 0, 255}
+	case BrightMagenta:
+		tc = TrueColor{255, 0, 255}
+	case BrightCyan:
+		tc = TrueColor{0, 255, 255}
+	case BrightWhite:
+		tc = TrueColor{255, 255, 255}
+	}
+	return
+}
+
+// ToTrueColor transforms an ExtendedANSIColor to a TrueColor representation
+func (c ExtendedANSIColor) ToTrueColor() TrueColor {
+	if c < 16 {
+		return ANSIColor(c).ToTrueColor()
+	} else if c > 232 {
+		gray := uint8((c-232)*10 + 8)
+		return TrueColor{gray, gray, gray}
+	}
+
+	ansi := uint8(c - 16)
+	return TrueColor{
+		Blue:  ansi % 6,
+		Green: (ansi / 6) % 6,
+		Red:   (ansi / 36) % 6,
+	}
+}
+
