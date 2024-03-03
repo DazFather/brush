@@ -130,7 +130,7 @@ func TestHighlighted_Append(t *testing.T) {
 	expected += " trash"
 	assert(t, `Append to "banana"`,
 		banana.Append(" trash").String(),
-		"trash [31mred banana[0m trash",
+		expected,
 	)
 
 	ciao := marker.Highlight("ciao", regexp.MustCompile(`(?i)[aeiou]`))

@@ -171,7 +171,7 @@ func (c TrueColor) background() string {
 }
 
 // ToTrueColor transforms an ANSIColor to a standard TrueColor representation.
-// Be aware that the actual color might be different from the original, 
+// Be aware that the actual color might be different from the original,
 // because the visible color might be different from the one of your terminal.
 func (c ANSIColor) ToTrueColor() (tc TrueColor) {
 	switch c {
@@ -227,4 +227,3 @@ func (c ExtendedANSIColor) ToTrueColor() TrueColor {
 		Red:   (ansi / 36) % 6,
 	}
 }
-

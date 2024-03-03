@@ -8,9 +8,9 @@ import (
 
 func main() {
 	var (
-		pinkish = brush.TrueColor{255, 82, 197}
+		pinkish  = brush.TrueColor{255, 82, 197}
 		brownish = brush.TrueColor{155, 106, 0}
-		test = brush.New(pinkish, &brownish)
+		test     = brush.New(pinkish, &brownish)
 	)
 
 	test.Println("Can you see this (correctly) ?")
