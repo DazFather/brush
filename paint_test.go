@@ -106,6 +106,10 @@ func TestPaint(t *testing.T) {
 		brush.Paint(brush.Yellow, brush.UseColor(brush.Blue), 1, " ", cool{}, " reversed ", ikea).String(),
 		"[33;44m1 cool reversed IKEA (not really) logo[0m",
 	)
+	assert(t, `Paiting "ikea" only`,
+		brush.Paint(brush.White.ToTrueColor(), nil, &ikea).String(),
+		"[38;2;192;192;192mIKEA (not really) logo[0m",
+	)
 }
 
 func TestPaintln(t *testing.T) {

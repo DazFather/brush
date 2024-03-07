@@ -1,6 +1,11 @@
 package brush
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+	"strconv"
+	"strings"
+)
 
 // ColorType represents a color from any set
 type ColorType interface {
@@ -170,6 +175,41 @@ func (c TrueColor) background() string {
 	return fmt.Sprint("48;2;", c.Red, ";", c.Green, ";", c.Blue)
 }
 
+// ParseHex parses a hexadecimal string representing a color and returns a TrueColor pointer
+// representing that color and an error if the provided string cannot be parsed.
+// The hex string can be in various formats (the "#" prefix is optional):
+//
+//   - "RRGGBB": Represents the red, green, and blue components respectively in the range 00 to FF.
+//   - "RGB": Represents a shorthand version of "#RRGGBB" where each component is a single digit
+//     and duplicated, e.g, "ABC" is equivalent to "AABBCC"
+func ParseHex(hex string) (*TrueColor, error) {
+	var chunk int
+
+	hex = strings.TrimPrefix(hex, "#")
+	switch len(hex) {
+	case 3:
+		chunk = 1
+	case 6:
+		chunk = 2
+	default:
+		return nil, fmt.Errorf("Cannot parse %s color: Invalid hex length, must be 3 or 6 digits long (excluding optional prefix '#')", hex)
+	}
+
+	nums := [3]uint8{}
+	for i := range nums {
+		n, err := strconv.ParseUint(hex[i*chunk:(i+1)*chunk], 16, 8)
+		if err != nil {
+			return nil, fmt.Errorf("Cannot parse %s color: %w", hex, err)
+		}
+		if chunk == 1 {
+			n += n * 16
+		}
+		nums[i] = uint8(n)
+	}
+
+	return &TrueColor{Red: nums[0], Green: nums[1], Blue: nums[2]}, nil
+}
+
 // ToTrueColor transforms an ANSIColor to a standard TrueColor representation.
 // Be aware that the actual color might be different from the original,
 // because the visible color might be different from the one of your terminal.
@@ -220,10 +260,27 @@ func (c ExtendedANSIColor) ToTrueColor() TrueColor {
 		return TrueColor{gray, gray, gray}
 	}
 
-	ansi := uint8(c - 16)
+	ansi := int(c) - 16
+	nums := [3]uint8{}
+	for i := range nums {
+		switch ColorIntensity((ansi / int(math.Pow(6, float64(i)))) % 6) {
+		case ZeroIntensity:
+			nums[i] = 0
+		case LowIntensity:
+			nums[i] = 95
+		case ModerateIntensity:
+			nums[i] = 135
+		case MediumIntensity:
+			nums[i] = 175
+		case HightIntensity:
+			nums[i] = 215
+		case MaxIntensity:
+			nums[i] = 255
+		}
+	}
 	return TrueColor{
-		Blue:  ansi % 6,
-		Green: (ansi / 6) % 6,
-		Red:   (ansi / 36) % 6,
+		Blue:  nums[0],
+		Green: nums[1], // (ansi / 6) % 6,
+		Red:   nums[2], // (ansi / 36) % 6,
 	}
 }

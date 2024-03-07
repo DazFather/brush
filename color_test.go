@@ -2,6 +2,7 @@ package brush_test
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/DazFather/brush"
 )
@@ -73,4 +74,89 @@ func ExampleTrueColor() {
 	myBrush.Println("HELLO WORLD")
 	// Output: [38;2;255;82;197;48;2;155;106;0mHELLO WORLD
 	// [0m
+}
+
+func ExampleParseHex() {
+	var (
+		color *brush.TrueColor
+		err   error
+	)
+
+	// Example with full RGB format (# is optional)
+	if color, err = brush.ParseHex("#FFA500"); err == nil {
+		fmt.Println("Yellow:", *color)
+	}
+
+	// Example with shorthand RGB format (# is optional)
+	if color, err = brush.ParseHex("F00"); err == nil {
+		fmt.Println("Red:", *color)
+	}
+
+	// Bad examples
+	_, err = brush.ParseHex("blue")
+	fmt.Println(err)
+	_, err = brush.ParseHex("daz")
+	fmt.Println(err)
+
+	// Output:
+	// Yellow: {255 165 0}
+	// Red: {255 0 0}
+	// Cannot parse blue color: Invalid hex length, must be 3 or 6 digits long (excluding optional prefix '#')
+	// Cannot parse daz color: strconv.ParseUint: parsing "z": invalid syntax
+}
+
+/* ---[ TESTS ]--- */
+
+func TestANSIColor_ToTrueColor(t *testing.T) {
+	// Test cases
+	tests := []struct {
+		input    brush.ANSIColor
+		expected brush.TrueColor
+	}{
+		{brush.Black, brush.TrueColor{0, 0, 0}},
+		{brush.Red, brush.TrueColor{128, 0, 0}},
+		{brush.Green, brush.TrueColor{0, 128, 0}},
+		{brush.Yellow, brush.TrueColor{128, 128, 0}},
+		{brush.Blue, brush.TrueColor{0, 0, 128}},
+		{brush.Magenta, brush.TrueColor{128, 0, 128}},
+		{brush.Cyan, brush.TrueColor{0, 128, 128}},
+		{brush.White, brush.TrueColor{192, 192, 192}},
+		{brush.BrightBlack, brush.TrueColor{128, 128, 128}},
+		{brush.BrightRed, brush.TrueColor{255, 0, 0}},
+		{brush.BrightGreen, brush.TrueColor{0, 255, 0}},
+		{brush.BrightYellow, brush.TrueColor{255, 255, 0}},
+		{brush.BrightBlue, brush.TrueColor{0, 0, 255}},
+		{brush.BrightMagenta, brush.TrueColor{255, 0, 255}},
+		{brush.BrightCyan, brush.TrueColor{0, 255, 255}},
+		{brush.BrightWhite, brush.TrueColor{255, 255, 255}},
+	}
+
+	// Iterate through test cases
+	for _, test := range tests {
+		result := test.input.ToTrueColor()
+		if result != test.expected {
+			t.Errorf("ToTrueColor(%v): got %v, want %v", test.input, result, test.expected)
+		}
+	}
+}
+
+func TestExtendedANSIColor_ToTrueColor(t *testing.T) {
+	// Test cases
+	tests := []struct {
+		input    brush.ExtendedANSIColor
+		expected brush.TrueColor
+	}{
+		{brush.Magenta.ToExtended(), brush.TrueColor{128, 0, 128}},
+		{brush.RGB(brush.MaxIntensity, 0, 0), brush.BrightRed.ToTrueColor()},
+		{brush.GrayScale(brush.MaxGrayScale), brush.BrightWhite.ToTrueColor()},
+		{brush.GrayScale(21), brush.TrueColor{208, 208, 208}},
+	}
+
+	// Iterate through test cases
+	for _, test := range tests {
+		result := test.input.ToTrueColor()
+		if result != test.expected {
+			t.Errorf("ToTrueColor(%v): got %v, want %v", test.input, result, test.expected)
+		}
+	}
 }
