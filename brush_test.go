@@ -46,21 +46,23 @@ func ExampleBrush_Swap() {
 	// [0m
 }
 
-func ExampleBrush_Print(values ...any) {
+func ExampleBrush_Print() {
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Print("Hello", " World")
 	// Output: [30;47mHello World[0m
 }
 
-func ExampleBrush_Println(values ...any) {
+func ExampleBrush_Println() {
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Println("Hello", "World")
-	// Output: [30;47mHello World[0m
+	// Output:
+	// [30;47mHello World
+	// [0m
 }
 
-func ExampleBrush_Printf(model string, values ...any) {
+func ExampleBrush_Printf() {
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Printf("%s %s", "Hello", "World")

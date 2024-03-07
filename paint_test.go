@@ -110,6 +110,10 @@ func TestPaint(t *testing.T) {
 
 func TestPaintln(t *testing.T) {
 	banana := brush.Paint(brush.Green, nil, "banana")
+	assert(t, `Painting "banana"`,
+		brush.Paintln(brush.White, nil, banana).String(),
+		"[37mbanana\n[0m",
+	)
 
 	assert(t, `Paiting "3 cool yellow bananas"`,
 		brush.Paintln(brush.Black, brush.UseColor(brush.Yellow), 3, cool{}, "yellow", banana.Append("s")).String(),
@@ -118,6 +122,10 @@ func TestPaintln(t *testing.T) {
 
 	assert(t, `Painting ""`,
 		brush.Paintln(brush.White, nil, "").String(),
+		"[37m\n[0m",
+	)
+	assert(t, `Painting nothing`,
+		brush.Paintln(brush.White, nil).String(),
 		"[37m\n[0m",
 	)
 }
