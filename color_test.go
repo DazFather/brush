@@ -76,6 +76,35 @@ func ExampleTrueColor() {
 	// [0m
 }
 
+func ExampleParseHex() {
+	var (
+		color *brush.TrueColor
+		err   error
+	)
+
+	// Example with full RGB format (# is optional)
+	if color, err = brush.ParseHex("#FFA500"); err == nil {
+		fmt.Println("Yellow:", *color)
+	}
+
+	// Example with shorthand RGB format (# is optional)
+	if color, err = brush.ParseHex("F00"); err == nil {
+		fmt.Println("Red:", *color)
+	}
+
+	// Bad examples
+	_, err = brush.ParseHex("blue")
+	fmt.Println(err)
+	_, err = brush.ParseHex("daz")
+	fmt.Println(err)
+
+	// Output:
+	// Yellow: {255 165 0}
+	// Red: {255 0 0}
+	// Cannot parse blue color: Invalid hex length, must be 3 or 6 digits long (excluding optional prefix '#')
+	// Cannot parse daz color: strconv.ParseUint: parsing "z": invalid syntax
+}
+
 /* ---[ TESTS ]--- */
 
 func TestANSIColor_ToTrueColor(t *testing.T) {
