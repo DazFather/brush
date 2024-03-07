@@ -1,6 +1,9 @@
 package brush
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // ColorType represents a color from any set
 type ColorType interface {
@@ -220,10 +223,27 @@ func (c ExtendedANSIColor) ToTrueColor() TrueColor {
 		return TrueColor{gray, gray, gray}
 	}
 
-	ansi := uint8(c - 16)
+	ansi := int(c) - 16
+	nums := [3]uint8{}
+	for i := range nums {
+		switch ColorIntensity((ansi / int(math.Pow(6, float64(i)))) % 6) {
+		case ZeroIntensity:
+			nums[i] = 0
+		case LowIntensity:
+			nums[i] = 95
+		case ModerateIntensity:
+			nums[i] = 135
+		case MediumIntensity:
+			nums[i] = 175
+		case HightIntensity:
+			nums[i] = 215
+		case MaxIntensity:
+			nums[i] = 255
+		}
+	}
 	return TrueColor{
-		Blue:  ansi % 6,
-		Green: (ansi / 6) % 6,
-		Red:   (ansi / 36) % 6,
+		Blue:  nums[0],
+		Green: nums[1], // (ansi / 6) % 6,
+		Red:   nums[2], // (ansi / 36) % 6,
 	}
 }
