@@ -64,8 +64,8 @@ If you need more examples, you can find more [here](https://github.com/DazFather
 
 
 ## Colors
-The library uses the ANSI Color codes in 2 different format:
- > I like to keep things separated for safety so when you declare a new brush or painting something be sure to use both colors (font and background) from the same `ColorType`. Each colortype is just a renamed type a specific integer, so when needed you can still use a number to represent the corresponding color code
+The library uses the ANSI Color codes in 3 different format:
+ > I like to keep things separated for safety so when you declare a new brush or painting something be sure to use both colors (font and background) from the same `ColorType`.
 
 ### ANSIColor
 For the original ANSI (16 colors) you can simply use the already defined constants:
@@ -73,9 +73,13 @@ For the original ANSI (16 colors) you can simply use the already defined constan
  > and their "bright" version: <br>
  > `BrightBlack`, `BrightRed`, `BrightGreen`, `BrightYellow`, `BrightBlue`, `BrightMagenta`, `BrightCyan`, `BrightWhite`
 
+Or use a simple interger (`int8`)
+
 ### ExtendedANSIColor
 For the extended ANSI (256 colors) you can or use one of the first 16 colors by using the method: `ToExtended()`
  > ex. `font := brush.Red.ToExtended()`
+
+As for the ANSIColor scheme you use a simple interger (`uint8`)
 
 For the last 24 colors (the grayscale) + black and white, you can use the the `GrayScale` function
  > White is the maximum value: `myWhite := brush.GrayScale(25)`, you can also use the constant `MaxGrayScale` <br>
@@ -85,5 +89,18 @@ For the last 24 colors (the grayscale) + black and white, you can use the the `G
 For the central part of the colors codes table you can compose them using their `RGB` values with the `RGB` function
  > You simply need to put the value or red, green and blue `myBlue := brush.RGB(0, 0, 5)`. <br>
  > Keep in mind throw that the scale goes from 0 to 5. To help with that there is a set of constant you can use: <br>
- > `ZeroIntensity` (0), `LowIntensity` (95), `ModerateIntensity` (135), `MediumIntensity` (175), `HightIntensity` (215), `MaxIntensity` (255)
+ > `ZeroIntensity` (0), `LowIntensity` (95), `ModerateIntensity` (135), `MediumIntensity` (175), `HightIntensity` (215), `MaxIntensity` (255) <br>
+ > If you need all the possible colors with rgb values ranging from 0 to 255 then...
+
+### TrueColor
+Not supported in every terminal but it allows to use all the red, green and blue values ranging from 0 to 255. 
+For the previous colors you can use the method `ToTrueColor()` provided for ANSIColor and ExtendedANSIColor ColorType
+ > ex. `font := brush.Red.ToTrueColor()`
+
+For the RGB is very easy: `TrueColor` is a struct with the Red, Green and Blue fields (`uint16`), so just initialize one
+ > ex. `yellow := brush.TrueColor{255, 165, 0}`
+
+If you need to convert an **hexadecimal** color, you can use the `ParseHex` function, it accept both `#RRGGBB` and `#RGB` formats,
+the `#` is totally optional 
+ > ex. `yellowPtr, err := brush.ParseHex("FFA500")`
 
