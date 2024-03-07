@@ -3,6 +3,8 @@ package brush
 import (
 	"fmt"
 	"math"
+	"strconv"
+	"strings"
 )
 
 // ColorType represents a color from any set
@@ -171,6 +173,41 @@ func (c TrueColor) foreground() string {
 
 func (c TrueColor) background() string {
 	return fmt.Sprint("48;2;", c.Red, ";", c.Green, ";", c.Blue)
+}
+
+// ParseHex parses a hexadecimal string representing a color and returns a TrueColor pointer
+// representing that color and an error if the provided string cannot be parsed.
+// The hex string can be in various formats (the "#" prefix is optional):
+//
+//   - "RRGGBB": Represents the red, green, and blue components respectively in the range 00 to FF.
+//   - "RGB": Represents a shorthand version of "#RRGGBB" where each component is a single digit
+//     and duplicated, e.g, "ABC" is equivalent to "AABBCC"
+func ParseHex(hex string) (*TrueColor, error) {
+	var chunk int
+
+	hex = strings.TrimPrefix(hex, "#")
+	switch len(hex) {
+	case 3:
+		chunk = 1
+	case 6:
+		chunk = 2
+	default:
+		return nil, fmt.Errorf("Cannot parse %s color: Invalid hex length, must be 3 or 6 digits long (excluding optional prefix '#')", hex)
+	}
+
+	nums := [3]uint8{}
+	for i := range nums {
+		n, err := strconv.ParseUint(hex[i*chunk:(i+1)*chunk], 16, 8)
+		if err != nil {
+			return nil, fmt.Errorf("Cannot parse %s color: %w", hex, err)
+		}
+		if chunk == 1 {
+			n += n * 16
+		}
+		nums[i] = uint8(n)
+	}
+
+	return &TrueColor{Red: nums[0], Green: nums[1], Blue: nums[2]}, nil
 }
 
 // ToTrueColor transforms an ANSIColor to a standard TrueColor representation.
