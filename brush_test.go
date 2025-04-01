@@ -3,6 +3,7 @@ package brush_test
 import "github.com/DazFather/brush"
 
 func ExampleBrush_UseFontColor() {
+	brush.DisableIfNotTTY = false
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Println("something")
@@ -14,6 +15,7 @@ func ExampleBrush_UseFontColor() {
 }
 
 func ExampleBrush_UseBgColor() {
+	brush.DisableIfNotTTY = false
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Println("something")
@@ -25,6 +27,7 @@ func ExampleBrush_UseBgColor() {
 }
 
 func ExampleBrush_UseBgTransparent() {
+	brush.DisableIfNotTTY = false
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Println("something")
@@ -36,6 +39,7 @@ func ExampleBrush_UseBgTransparent() {
 }
 
 func ExampleBrush_Swap() {
+	brush.DisableIfNotTTY = false
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Println("something")
@@ -47,6 +51,7 @@ func ExampleBrush_Swap() {
 }
 
 func ExampleBrush_Print() {
+	brush.DisableIfNotTTY = false
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Print("Hello", " World")
@@ -54,6 +59,7 @@ func ExampleBrush_Print() {
 }
 
 func ExampleBrush_Println() {
+	brush.DisableIfNotTTY = false
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Println("Hello", "World")
@@ -63,6 +69,7 @@ func ExampleBrush_Println() {
 }
 
 func ExampleBrush_Printf() {
+	brush.DisableIfNotTTY = false
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 
 	myBrush.Printf("%s %s", "Hello", "World")

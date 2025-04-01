@@ -10,6 +10,8 @@ import (
 /* ---[ EXAMPLES ]--- */
 
 func ExampleRGB() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	pink := brush.RGB(
 		brush.MaxIntensity,
 		brush.MediumIntensity,
@@ -21,6 +23,8 @@ func ExampleRGB() {
 }
 
 func ExampleGrayScale() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	var (
 		white     = brush.GrayScale(brush.MaxGrayScale)
 		lightGray = brush.GrayScale(brush.MaxGrayScale - 5)
@@ -44,6 +48,8 @@ func ExampleGrayScale() {
 }
 
 func ExampleUseColor() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	selectedBg := brush.UseColor(brush.Magenta)
 
 	fmt.Println(brush.Paint(brush.BrightMagenta, selectedBg, "Magenta"), "is cool")
@@ -51,6 +57,8 @@ func ExampleUseColor() {
 }
 
 func ExamplePickColor() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	myBrush := brush.New(brush.Yellow, nil)
 	reversed := brush.New(
 		brush.PickColor(myBrush.Background, brush.Black),
@@ -65,6 +73,8 @@ func ExamplePickColor() {
 }
 
 func ExampleTrueColor() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	var (
 		pinkish  = brush.TrueColor{Red: 255, Green: 82, Blue: 197}
 		brownish = brush.TrueColor{155, 106, 0}
@@ -77,6 +87,8 @@ func ExampleTrueColor() {
 }
 
 func ExampleParseHex() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	var (
 		color *brush.TrueColor
 		err   error
@@ -108,6 +120,8 @@ func ExampleParseHex() {
 /* ---[ TESTS ]--- */
 
 func TestANSIColor_ToTrueColor(t *testing.T) {
+	brush.DisableIfNotTTY = false
+
 	// Test cases
 	tests := []struct {
 		input    brush.ANSIColor
@@ -141,6 +155,8 @@ func TestANSIColor_ToTrueColor(t *testing.T) {
 }
 
 func TestExtendedANSIColor_ToTrueColor(t *testing.T) {
+	brush.DisableIfNotTTY = false
+
 	// Test cases
 	tests := []struct {
 		input    brush.ExtendedANSIColor

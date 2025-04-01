@@ -3,19 +3,34 @@ package brush
 import (
 	"fmt"
 	"strings"
+
+	"golang.org/x/term"
+	"os"
 )
 
 // Painted represents a string that contains information about it's foreground and background color output
 type Painted struct {
 	content string
+	disable bool
 	style
 }
+
+var (
+	isATTY = term.IsTerminal(int(os.Stdout.Fd()))
+
+	// DisableIfNotTTY disables Painted and Brush if it detects application is
+	// not in a tty at a global level (for this library)
+	DisableIfNotTTY = true
+)
 
 // Paint some values (joined without separator) with the specified font and background color.
 // If a Painted and/or an Highlighted item is given, they will lose their previous style
 // and provided font and background colors will be enforced
 func Paint[color ColorType](font color, background Optional[color], values ...any) Painted {
-	var res = Painted{style: serialize(font, background)}
+	var res = Painted{
+		style:   serialize(font, background),
+		disable: DisableIfNotTTY && isATTY,
+	}
 
 	for _, v := range values {
 		res.content += extractContent(v)
@@ -30,7 +45,10 @@ func Paint[color ColorType](font color, background Optional[color], values ...an
 // and provided font and background colors will be enforced
 func Paintln[color ColorType](font color, background Optional[color], values ...any) Painted {
 	const separator = " "
-	var res = Painted{style: serialize(font, background)}
+	var res = Painted{
+		style:   serialize(font, background),
+		disable: DisableIfNotTTY && isATTY,
+	}
 
 	if len(values) == 0 {
 		res.content = "\n"
@@ -65,7 +83,9 @@ func Paintf[color ColorType](font color, background Optional[color], model strin
 // If a Painted and/or an Highlighted item is given, they will lose their previous style
 // and the current styling of the brush will be enforced
 func (b Brush[color]) Paint(values ...any) Painted {
-	return Paint(b.Foreground, b.Background, values...)
+	p := Paint(b.Foreground, b.Background, values...)
+	p.disable = b.Disable
+	return p
 }
 
 // Paintln like Paint but similarly to fmt.Sprintln it separates values with " "
@@ -73,7 +93,9 @@ func (b Brush[color]) Paint(values ...any) Painted {
 // If a Painted and/or an Highlighted item is given, they will lose their previous style
 // and the current styling of the brush will be enforced
 func (b Brush[color]) Paintln(values ...any) Painted {
-	return Paintln(b.Foreground, b.Background, values...)
+	p := Paintln(b.Foreground, b.Background, values...)
+	p.disable = b.Disable
+	return p
 }
 
 // Paintf is like Paint but similarly to fmt.Sprintf it allows to use a model
@@ -81,11 +103,16 @@ func (b Brush[color]) Paintln(values ...any) Painted {
 // If a Painted and/or an Highlighted item is given, they will lose their previous style
 // and the current styling of the brush will be enforced
 func (b Brush[color]) Paintf(model string, values ...any) Painted {
-	return Paintf(b.Foreground, b.Background, model, values...)
+	p := Paintf(b.Foreground, b.Background, model, values...)
+	p.disable = b.Disable
+	return p
 }
 
 // String gives a string that contains some special sequence that will apply styling
 func (p Painted) String() string {
+	if p.disable {
+		return p.content
+	}
 	return p.apply(p.content)
 }
 

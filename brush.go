@@ -6,13 +6,16 @@ import "fmt"
 type Brush[color ColorType] struct {
 	Foreground, defForeground color
 	Background, defBackground Optional[color]
+	Disable                   bool
 }
 
-// New creates a new Brush with the given default colors of a specified set
+// New creates a new Brush with the given default colors of a specified set.
+// Disable will be set as false unless it detects application is not in a tty and DisableIfNotTTY is true
 func New[color ColorType](font color, background Optional[color]) Brush[color] {
 	var b = Brush[color]{
 		defForeground: font,
 		defBackground: background,
+		Disable:       DisableIfNotTTY && isATTY,
 	}
 	b.UseDefaultColor()
 

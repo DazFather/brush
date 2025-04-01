@@ -158,6 +158,10 @@ func (s style) apply(content string) string {
 		style += ";" + s.background
 	}
 
+	if style == "" {
+		return content
+	}
+
 	return fmt.Sprintf("%s%sm%s%sm", csi, style, content, csi+colorReset)
 }
 

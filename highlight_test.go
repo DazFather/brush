@@ -12,6 +12,8 @@ import (
 /* ---[ EXAMPLES ]--- */
 
 func ExampleJoin() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	fmt.Print(brush.Join(
 		brush.Paint(brush.Red, nil, "Roses are red"),
 		",\n",
@@ -26,6 +28,8 @@ func ExampleJoin() {
 }
 
 func ExampleBrush_Highlight() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	var (
 		marker = brush.New(brush.Black, brush.UseColor(brush.Yellow))
 		text   = "bla bla something intresting, something intresting blah bla"
@@ -38,6 +42,8 @@ func ExampleBrush_Highlight() {
 }
 
 func ExampleBrush_HighlightFunc() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	marker := brush.New(brush.Black, brush.UseColor(brush.BrightYellow))
 
 	fmt.Print(marker.HighlightFunc(
@@ -49,6 +55,8 @@ func ExampleBrush_HighlightFunc() {
 }
 
 func ExampleHighlighted_Append() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	var (
 		marker = brush.New(brush.Black, brush.UseColor(brush.Yellow))
 		h      = marker.Highlight("Hello world!", regexp.MustCompile("Hello"))
@@ -59,6 +67,8 @@ func ExampleHighlighted_Append() {
 }
 
 func ExampleBrush_Embed() {
+	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+
 	var (
 		green  = brush.New(brush.Green, nil)
 		blue   = brush.New(brush.Blue, nil)
@@ -79,6 +89,8 @@ func ExampleBrush_Embed() {
 /* ---[ TESTS ]--- */
 
 func TestBrush_Highlight(t *testing.T) {
+	brush.DisableIfNotTTY = false
+
 	var (
 		rgx    = regexp.MustCompile(`red`)
 		marker = brush.New(brush.Red, nil)
@@ -101,6 +113,8 @@ func TestBrush_Highlight(t *testing.T) {
 }
 
 func TestBrush_HighlightFunc(t *testing.T) {
+	brush.DisableIfNotTTY = false
+
 	var (
 		rgx    = regexp.MustCompile(`red`)
 		marker = brush.New(brush.Red, nil)
@@ -115,6 +129,8 @@ func TestBrush_HighlightFunc(t *testing.T) {
 }
 
 func TestHighlighted_Append(t *testing.T) {
+	brush.DisableIfNotTTY = false
+
 	var (
 		rgx    = regexp.MustCompile(`red( \w+)?`)
 		marker = brush.New(brush.Red, nil)
@@ -149,6 +165,8 @@ func TestHighlighted_Append(t *testing.T) {
 }
 
 func TestBrush_Embed(t *testing.T) {
+	brush.DisableIfNotTTY = false
+
 	var (
 		myBrush = brush.New(brush.Red, nil)
 		marker  = brush.New(brush.Black, brush.UseColor(brush.Yellow))
