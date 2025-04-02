@@ -7,27 +7,37 @@ import (
 
 type section struct {
 	from, to int
-	style
+	*style
 }
 
 func (b Brush[color]) newSection(from, to int) section {
-	return section{
-		from:  from,
-		to:    to,
-		style: b.extract(),
+	s := section{
+		from: from,
+		to:   to,
 	}
+	if !b.Disable {
+		t := b.extract()
+		s.style = &t
+	}
+	return s
 }
 
-func (b Painted) newSection(from int) section {
-	return section{
-		from:  from,
-		to:    from + len(b.content),
-		style: b.style,
+func (p Painted) newSection(from int) section {
+	s := section{
+		from: from,
+		to:   from + len(p.content),
 	}
+	if !p.disable {
+		s.style = &p.style
+	}
+	return s
 }
 
 func (s section) evaluateOn(content string) string {
-	return s.style.apply(content[s.from:s.to])
+	if s.style == nil {
+		return content[s.from:s.to]
+	}
+	return s.apply(content[s.from:s.to])
 }
 
 func (s *section) shift(offset int) {

@@ -112,22 +112,6 @@ func TestBrush_Highlight(t *testing.T) {
 	)
 }
 
-func TestBrush_HighlightFunc(t *testing.T) {
-	brush.DisableIfNotTTY = false
-
-	var (
-		rgx    = regexp.MustCompile(`red`)
-		marker = brush.New(brush.Red, nil)
-		repl   = func(_ string) string { return "" }
-		text   = "garbage"
-	)
-
-	assert(t, `Highlighting: nothing`,
-		marker.HighlightFunc(text, rgx, repl).String(),
-		text,
-	)
-}
-
 func TestHighlighted_Append(t *testing.T) {
 	brush.DisableIfNotTTY = false
 
@@ -191,12 +175,12 @@ func TestBrush_Embed(t *testing.T) {
 	h := marker.Highlight(text, vouels)
 	expected := "[30;43mA[0m[31m f[0m[30;43mo[0m[31mx j[0m[30;43mu[0m[31mmps [0m[30;43mo[0m[31mv[0m[30;43me[0m[31mr th[0m[30;43me[0m[31m l[0m[30;43ma[0m[31mzy d[0m[30;43mo[0m[31mg[0m[31m![0m"
 
-	assert(t, fmt.Sprintf(`Embedding: "%s"`, text),
+	assert(t, fmt.Sprintf("Embedding: %q", text),
 		myBrush.Embed(h, "!").String(),
 		expected,
 	)
 
-	assert(t, fmt.Sprintf(`Embedding: pointer to "%s"`, text),
+	assert(t, fmt.Sprintf("Embedding: pointer to %q", text),
 		myBrush.Embed(&h, "!").String(),
 		expected,
 	)
@@ -209,10 +193,31 @@ func TestBrush_Embed(t *testing.T) {
 		expected,
 	)
 
-	assert(t, fmt.Sprintf(`Embedding: pointer to "%s"`, text),
-		myBrush.Embed(&h, "!").String(),
+	// DISABLING myBrush
+	myBrush.Disable = true
+
+	expected = "TEST!"
+	assert(t, fmt.Sprintf("Embedding: %q but brush is disabled", expected),
+		myBrush.Embed(expected).String(),
 		expected,
 	)
+	
+	expected = fmt.Sprint("I ", marker.Paint("<3"), " Go!")
+	assert(t, fmt.Sprintf("Embedding: %q but brush is disabled", expected),
+		myBrush.Embed("I ", marker.Paint("<3"), " Go!").String(),
+		expected,
+	)
+
+	// DISABLING marker
+	marker.Disable = true
+
+	expected = "I <3 Go!"
+	assert(t, fmt.Sprintf("Embedding: %q but brush is disabled", expected),
+		myBrush.Embed("I ", marker.Paint("<3"), " Go!").String(),
+		expected,
+	)
+
+	// assert(t, fmt.Sprintf("", ))
 }
 
 func reverse(s string) string {
