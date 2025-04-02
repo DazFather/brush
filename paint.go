@@ -21,6 +21,9 @@ var (
 	// DisableIfNotTTY disables Painted and Brush if it detects application is
 	// not in a tty at a global level (for this library)
 	DisableIfNotTTY = true
+
+	// Disable colored output. By default it depends by DisableIfNotTTY
+	Disable = DisableIfNotTTY && !isATTY
 )
 
 // Paint some values (joined without separator) with the specified font and background color.
@@ -29,7 +32,7 @@ var (
 func Paint[color ColorType](font color, background Optional[color], values ...any) Painted {
 	var res = Painted{
 		style:   serialize(font, background),
-		disable: DisableIfNotTTY && isATTY,
+		disable: Disable || DisableIfNotTTY && !isATTY,
 	}
 
 	for _, v := range values {
@@ -47,7 +50,7 @@ func Paintln[color ColorType](font color, background Optional[color], values ...
 	const separator = " "
 	var res = Painted{
 		style:   serialize(font, background),
-		disable: DisableIfNotTTY && isATTY,
+		disable: Disable || DisableIfNotTTY && !isATTY,
 	}
 
 	if len(values) == 0 {

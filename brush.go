@@ -15,7 +15,7 @@ func New[color ColorType](font color, background Optional[color]) Brush[color] {
 	var b = Brush[color]{
 		defForeground: font,
 		defBackground: background,
-		Disable:       DisableIfNotTTY && isATTY,
+		Disable:       Disable || DisableIfNotTTY && !isATTY,
 	}
 	b.UseDefaultColor()
 
