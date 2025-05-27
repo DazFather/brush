@@ -201,7 +201,7 @@ func TestBrush_Embed(t *testing.T) {
 		myBrush.Embed(expected).String(),
 		expected,
 	)
-	
+
 	expected = fmt.Sprint("I ", marker.Paint("<3"), " Go!")
 	assert(t, fmt.Sprintf("Embedding: %q but brush is disabled", expected),
 		myBrush.Embed("I ", marker.Paint("<3"), " Go!").String(),

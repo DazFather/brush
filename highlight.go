@@ -54,15 +54,23 @@ type Highlighted struct {
 	disable bool
 }
 
+func newHighlighted(content string) (h Highlighted) {
+	return Highlighted{
+		content: content,
+		disable: Disable || DisableIfNotTTY && !isATTY,
+	}
+}
+
 // Join different values together into a single item maintaining all styling
-func Join(values ...any) (joined Highlighted) {
-	joined.Append(values...)
-	return
+func Join(values ...any) Highlighted {
+	h := newHighlighted("")
+	h.Append(values...)
+	return h
 }
 
 // Highlight only the matching part of the given string with the color of the brush
 func (b Brush[color]) Highlight(s string, find *regexp.Regexp) Highlighted {
-	var result = Highlighted{content: s, disable: b.Disable}
+	var result = newHighlighted(s)
 	if result.disable {
 		return result
 	}
@@ -83,7 +91,7 @@ func (b Brush[color]) Highlight(s string, find *regexp.Regexp) Highlighted {
 // HighlightFunc is like Highlight but allows you to replace the part that will match
 // the returned string of the repl function will then be highlighted using brush styling
 func (b Brush[color]) HighlightFunc(s string, find *regexp.Regexp, repl func(string) string) Highlighted {
-	var result = Highlighted{disable: b.Disable}
+	var result = newHighlighted("")
 
 	found := find.FindAllStringIndex(s, -1)
 	if found == nil {
@@ -123,7 +131,7 @@ func (b Brush[color]) HighlightFunc(s string, find *regexp.Regexp, repl func(str
 // Highlighted items will maintain their styling only on the subset that contains info about it,
 // for other values (and the subset of Highlighted items that do not specify info) the brush style will be enforced
 func (b Brush[color]) Embed(values ...any) Highlighted {
-	var res = Highlighted{disable: b.Disable}
+	var res = newHighlighted("")
 
 	for _, rawValue := range values {
 		size := len(res.content)

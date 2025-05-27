@@ -87,7 +87,7 @@ func Paintf[color ColorType](font color, background Optional[color], model strin
 // and the current styling of the brush will be enforced
 func (b Brush[color]) Paint(values ...any) Painted {
 	p := Paint(b.Foreground, b.Background, values...)
-	p.disable = b.Disable
+	p.disable = b.Disable || p.disable
 	return p
 }
 
@@ -97,7 +97,7 @@ func (b Brush[color]) Paint(values ...any) Painted {
 // and the current styling of the brush will be enforced
 func (b Brush[color]) Paintln(values ...any) Painted {
 	p := Paintln(b.Foreground, b.Background, values...)
-	p.disable = b.Disable
+	p.disable = b.Disable || p.disable
 	return p
 }
 
@@ -107,7 +107,7 @@ func (b Brush[color]) Paintln(values ...any) Painted {
 // and the current styling of the brush will be enforced
 func (b Brush[color]) Paintf(model string, values ...any) Painted {
 	p := Paintf(b.Foreground, b.Background, model, values...)
-	p.disable = b.Disable
+	p.disable = b.Disable || p.disable
 	return p
 }
 
