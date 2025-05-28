@@ -217,10 +217,11 @@ func (h *Highlighted) append(v Highlighted) {
 
 // String evaluates the content by applying the different styling where specified
 func (h Highlighted) String() string {
-	var (
-		res  string
-		last int
-	)
+	if h.disable {
+		return h.content
+	}
+
+	var res, last = "", 0
 
 	for _, sec := range h.sectors {
 		if last < sec.from {
