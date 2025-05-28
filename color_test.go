@@ -10,7 +10,7 @@ import (
 /* ---[ EXAMPLES ]--- */
 
 func ExampleRGB() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	pink := brush.RGB(
 		brush.MaxIntensity,
@@ -23,7 +23,7 @@ func ExampleRGB() {
 }
 
 func ExampleGrayScale() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	var (
 		white     = brush.GrayScale(brush.MaxGrayScale)
@@ -48,7 +48,7 @@ func ExampleGrayScale() {
 }
 
 func ExampleUseColor() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variable
 
 	selectedBg := brush.UseColor(brush.Magenta)
 
@@ -57,7 +57,7 @@ func ExampleUseColor() {
 }
 
 func ExamplePickColor() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variable
 
 	myBrush := brush.New(brush.Yellow, nil)
 	reversed := brush.New(
@@ -73,7 +73,7 @@ func ExamplePickColor() {
 }
 
 func ExampleTrueColor() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variable
 
 	var (
 		pinkish  = brush.TrueColor{Red: 255, Green: 82, Blue: 197}
@@ -87,7 +87,7 @@ func ExampleTrueColor() {
 }
 
 func ExampleParseHex() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variable
 
 	var (
 		color *brush.TrueColor
@@ -120,7 +120,7 @@ func ExampleParseHex() {
 /* ---[ TESTS ]--- */
 
 func TestANSIColor_ToTrueColor(t *testing.T) {
-	brush.DisableIfNotTTY = false
+	brush.Disable, brush.DisableIfNotTTY = false, false
 
 	// Test cases
 	tests := []struct {
@@ -155,7 +155,7 @@ func TestANSIColor_ToTrueColor(t *testing.T) {
 }
 
 func TestExtendedANSIColor_ToTrueColor(t *testing.T) {
-	brush.DisableIfNotTTY = false
+	brush.Disable, brush.DisableIfNotTTY = false, false
 
 	// Test cases
 	tests := []struct {

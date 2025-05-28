@@ -12,7 +12,7 @@ import (
 /* ---[ EXAMPLES ]--- */
 
 func ExampleJoin() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	fmt.Print(brush.Join(
 		brush.Paint(brush.Red, nil, "Roses are red"),
@@ -28,7 +28,7 @@ func ExampleJoin() {
 }
 
 func ExampleBrush_Highlight() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	var (
 		marker = brush.New(brush.Black, brush.UseColor(brush.Yellow))
@@ -42,7 +42,7 @@ func ExampleBrush_Highlight() {
 }
 
 func ExampleBrush_HighlightFunc() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	marker := brush.New(brush.Black, brush.UseColor(brush.BrightYellow))
 
@@ -55,7 +55,7 @@ func ExampleBrush_HighlightFunc() {
 }
 
 func ExampleHighlighted_Append() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	var (
 		marker = brush.New(brush.Black, brush.UseColor(brush.Yellow))
@@ -67,7 +67,7 @@ func ExampleHighlighted_Append() {
 }
 
 func ExampleBrush_Embed() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	var (
 		green  = brush.New(brush.Green, nil)
@@ -89,7 +89,7 @@ func ExampleBrush_Embed() {
 /* ---[ TESTS ]--- */
 
 func TestBrush_Highlight(t *testing.T) {
-	brush.DisableIfNotTTY = false
+	brush.Disable, brush.DisableIfNotTTY = false, false
 
 	var (
 		rgx    = regexp.MustCompile(`red`)
@@ -113,7 +113,7 @@ func TestBrush_Highlight(t *testing.T) {
 }
 
 func TestHighlighted_Append(t *testing.T) {
-	brush.DisableIfNotTTY = false
+	brush.Disable, brush.DisableIfNotTTY = false, false
 
 	var (
 		rgx    = regexp.MustCompile(`red( \w+)?`)
@@ -149,7 +149,7 @@ func TestHighlighted_Append(t *testing.T) {
 }
 
 func TestBrush_Embed(t *testing.T) {
-	brush.DisableIfNotTTY = false
+	brush.Disable, brush.DisableIfNotTTY = false, false
 
 	var (
 		myBrush = brush.New(brush.Red, nil)

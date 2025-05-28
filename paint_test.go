@@ -11,16 +11,17 @@ import (
 /* ---[ EXAMPLES ]--- */
 
 func ExamplePaint() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	fmt.Println("I", brush.Paint(brush.Red, nil, "love"), "go")
 
 	// Output:
 	// I [31mlove[0m go
-}
+	// 
+}	
 
 func ExamplePaintln() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	painted := brush.Paintln(brush.Black, brush.UseColor(brush.White),
 		"Hello", "World", "!",
@@ -33,7 +34,7 @@ func ExamplePaintln() {
 }
 
 func ExamplePaintf() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	blue := brush.Paintf(brush.White, brush.UseColor(brush.Blue), "%s", "blue")
 	fmt.Println("The sky is", blue)
@@ -43,7 +44,7 @@ func ExamplePaintf() {
 }
 
 func ExampleBrush_Paint() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	myBrush := brush.New(brush.Red, nil)
 	fmt.Println("I", myBrush.Paint("love"), "go")
@@ -53,7 +54,7 @@ func ExampleBrush_Paint() {
 }
 
 func ExampleBrush_Paintln() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	myBrush := brush.New(brush.Black, brush.UseColor(brush.White))
 	fmt.Print(myBrush.Paintln("Hello", "World", "!"))
@@ -64,7 +65,7 @@ func ExampleBrush_Paintln() {
 }
 
 func ExampleBrush_Paintf() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	myBrush := brush.New(brush.White, brush.UseColor(brush.Blue))
 	fmt.Println("The sky is", myBrush.Paintf("%s", "blue"))
@@ -74,7 +75,7 @@ func ExampleBrush_Paintf() {
 }
 
 func ExamplePainted_Append() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	banans := brush.Paint(brush.Yellow, nil, "banana")
 	fmt.Println(banans.Append("s"))
@@ -85,7 +86,7 @@ func ExamplePainted_Append() {
 // Prepend a string at the start of the content of the painted item
 // Warning: Do not use string containing styling
 func ExamplePainted_Prepend() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	banana := brush.Paint(brush.Yellow, nil, "banana")
 	fmt.Println(banana.Prepend("yellow "))
@@ -97,7 +98,7 @@ func ExamplePainted_Prepend() {
 // Is possible to use the %s to refer to embed previous content
 // Warning: Do not use string containing styling
 func ExamplePainted_Replace() {
-	brush.DisableIfNotTTY = false // probably you don't want to override this variable
+	brush.Disable, brush.DisableIfNotTTY = false, false // probably you don't want to override these variables
 
 	banana := brush.Paint(brush.Yellow, nil, "banana")
 	fmt.Println(banana.Replace(`The name "%s", is funny`))
@@ -108,9 +109,9 @@ func ExamplePainted_Replace() {
 /* ---[ TESTS ]--- */
 
 func TestPaint(t *testing.T) {
-	brush.DisableIfNotTTY = false
+	brush.Disable, brush.DisableIfNotTTY = false, false
 
-	assert(t, `Paiting "I love go"`,
+	assert(t, `Paiting "I love ese"s`,
 		fmt.Sprintln("I", brush.Paint(brush.Red, nil, "love"), "go"),
 		"I [31mlove[0m go\n",
 	)
@@ -133,7 +134,7 @@ func TestPaint(t *testing.T) {
 }
 
 func TestPaintln(t *testing.T) {
-	brush.DisableIfNotTTY = false
+	brush.Disable, brush.DisableIfNotTTY = false, false
 
 	banana := brush.Paint(brush.Green, nil, "banana")
 	assert(t, `Painting "banana"`,
@@ -159,6 +160,7 @@ func TestPaintln(t *testing.T) {
 /* ---[ UTILS ]--- */
 
 func assert[T comparable](t *testing.T, prefix string, got, want T) (pass bool) {
+	t.Helper()
 	if pass = want == got; !pass {
 		t.Error(prefix, "| want: ", want, " got: ", got)
 	}
